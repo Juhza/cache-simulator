@@ -1,0 +1,45 @@
+﻿@using CacheSimulator.Entities
+@using CacheSimulator.Enums
+@using CacheSimulator.Models
+
+<h3>Cache Simulator</h3>
+
+<EditForm Model="_cacheConfiguration" OnSubmit="ShowResults">
+    <div class="row">
+        <div class="col mb-3">
+            <label for="numberOfBlocks" class="form-label">Number of Blocks</label>
+            <input type="number" class="form-control" id="numberOfBlocks" placeholder="1">
+        </div>
+        <div class="col mb-3">
+            <label for="blockSize" class="form-label">Block Size (words)</label>
+            <input type="number" class="form-control" id="blockSize" placeholder="1">
+        </div>
+        <div class="col-5 mb-3">
+            <label for="placementPolicy" class="form-label">Placement policy</label>
+            <select class="form-select">
+                <option value="@PlacementPolicy.DirectMapping">Direct Mapping</option>
+                <option value="@PlacementPolicy.FullyAssociative">Fully Associative</option>
+                <option value="@PlacementPolicy.NWaySetAssociative">N-Way Set Associative</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <input type="submit" class="btn btn-secondary btn-lg" value="Show cache performance results" />
+    </div>
+</EditForm>
+
+
+@code {
+    private CacheConfigurationModel _cacheConfiguration = new();
+
+    private void ShowResults(){
+        var cacheConfiguration = new CacheConfiguration(
+            placementPolicy: _cacheConfiguration.PlacementPolicy,
+            numberOfBlocks: _cacheConfiguration.NumberOfBlocks,
+            blockSize: _cacheConfiguration.BlockSize
+        );
+
+        // usar service p calcular
+        // mostrar no output
+    }
+}
