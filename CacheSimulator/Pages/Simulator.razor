@@ -1,45 +1,81 @@
 ﻿@using CacheSimulator.Entities
 @using CacheSimulator.Enums
 @using CacheSimulator.Models
+@using CacheSimulator.novo
 
 <h3>Cache Simulator</h3>
 
-<EditForm Model="_cacheConfiguration" OnSubmit="ShowResults">
-    <div class="row">
-        <div class="col mb-3">
-            <label for="numberOfBlocks" class="form-label">Number of Blocks</label>
-            <input type="number" class="form-control" id="numberOfBlocks" placeholder="1">
+@if (!_showResults)
+{
+    <EditForm Model="_cacheConfiguration" OnSubmit="ShowResults">
+
+        @if (!string.IsNullOrEmpty(_errorMessage))
+        {
+            <div class="alert alert-danger" role="alert">@_errorMessage</div>
+        }
+
+        <div class="row">
+            <div class="col mb-3">
+                <label for="numberOfBlocks" class="form-label" @bind="_cacheConfiguration.NumberOfBlocks">Number of Blocks</label>
+                <input type="number" class="form-control" id="numberOfBlocks" placeholder="1" @bind="_cacheConfiguration.NumberOfBlocks">
+            </div>
+            <div class="col mb-3">
+                <label for="blockSize" class="form-label">Block Size (words)</label>
+                <input type="number" class="form-control" id="blockSize" placeholder="1" @bind="_cacheConfiguration.BlockSize">
+            </div>
+            <div class="col-5 mb-3">
+                <label for="placementPolicy" class="form-label">Placement policy</label>
+                <select class="form-select" @bind="_cacheConfiguration.PlacementPolicy">
+                    <option value="@PlacementPolicy.DirectMapping">Direct Mapping</option>
+                    <option value="@PlacementPolicy.FullyAssociative">Fully Associative</option>
+                    <option value="@PlacementPolicy.NWaySetAssociative">N-Way Set Associative</option>
+                </select>
+            </div>
         </div>
-        <div class="col mb-3">
-            <label for="blockSize" class="form-label">Block Size (words)</label>
-            <input type="number" class="form-control" id="blockSize" placeholder="1">
+        <div class="d-flex justify-content-center mt-3">
+            <input type="submit" class="btn btn-secondary btn-lg" value="Show cache performance results" />
         </div>
-        <div class="col-5 mb-3">
-            <label for="placementPolicy" class="form-label">Placement policy</label>
-            <select class="form-select">
-                <option value="@PlacementPolicy.DirectMapping">Direct Mapping</option>
-                <option value="@PlacementPolicy.FullyAssociative">Fully Associative</option>
-                <option value="@PlacementPolicy.NWaySetAssociative">N-Way Set Associative</option>
-            </select>
-        </div>
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-        <input type="submit" class="btn btn-secondary btn-lg" value="Show cache performance results" />
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    <Results Cache="_cache"></Results>
+}
 
 
 @code {
     private CacheConfigurationModel _cacheConfiguration = new();
+    private bool _showResults;
+    private string _errorMessage = string.Empty;
+    private novo.Cache _cache;
 
-    private void ShowResults(){
-        var cacheConfiguration = new CacheConfiguration(
-            placementPolicy: _cacheConfiguration.PlacementPolicy,
-            numberOfBlocks: _cacheConfiguration.NumberOfBlocks,
-            blockSize: _cacheConfiguration.BlockSize
-        );
+    private void ShowResults()
+    {
+        _errorMessage = string.Empty;
+        
+        if (!_cacheConfiguration.NumberOfBlocks.IsPowerOfTwo() || !_cacheConfiguration.BlockSize.IsPowerOfTwo())
+        {
+            _errorMessage = "Não foi possível completar a operação.";
+        }
 
-        // usar service p calcular
-        // mostrar no output
+        switch (_cacheConfiguration.PlacementPolicy)
+        {
+            case PlacementPolicy.FullyAssociative:
+                _cache = new FullyAssociativeCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks);
+                break;
+
+            case PlacementPolicy.NWaySetAssociative:
+                _cache = new SetAssociativeCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks, 1); // trocar o 1
+                break;
+
+            case PlacementPolicy.DirectMapping:
+                _cache = new DirectMappingCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks);
+                break;
+        }
+
+        // chamar logica
+        // gerar resultado
+
+        _showResults = true;
     }
 }
