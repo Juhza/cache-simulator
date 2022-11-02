@@ -2,7 +2,17 @@
 {
     public class SetAssociativeCache : Cache
     {
-        public SetAssociativeCache(CacheConfiguration cacheConfiguration) : base(cacheConfiguration) { }
+        public List<int>[] Recently;
+
+        public SetAssociativeCache(CacheConfiguration cacheConfiguration) : base(cacheConfiguration)
+        {
+            Recently = new List<int>[SetSizeDecimal];
+
+            for (int i = 0; i < SetSizeDecimal; i++)
+            {
+                Recently[i] = new List<int>();
+            }
+        }
 
         override
         public void InsertWord(Word word, Address address)
@@ -15,12 +25,14 @@
             int word_int = Convert.ToInt32(word_id, 2);
             int blocks_per_set = BlockSizeDecimal / SetSizeDecimal;
 
-            Console.WriteLine("[" + address.Binary + "] " + tag + " | " + set_id + " | " + word_id + " (" + set_int + ", " + word_int + ")");
+            //Console.WriteLine("[" + address.Binary + "] " + tag + " | " + set_id + " | " + word_id + " (" + set_int + ", " + word_int + ")");
+
+            inserts++;
 
             int tag_encontrada = -1;
             int nulo_encontrado = -1;
 
-            for (int i = 0; i < set_int; i++)
+            for (int i = 0; i < blocks_per_set; i++)
             {
                 if (Tags[(set_int * blocks_per_set) + i] == null)
                 {
@@ -40,9 +52,16 @@
 
             if (tag_encontrada != -1)
             {
+                if (BlockReplacementPolicy == Enums.BlockReplacementPolicy.LRU)
+                {
+                    if (Recently[set_int].Contains(tag_encontrada))
+                    {
+                        Recently[set_int].Remove(tag_encontrada);
+                    }
+                    Recently[set_int].Add(tag_encontrada);
+                }
                 if (Blocks[tag_encontrada, word_int] == null)
                 {
-
                     DirtyBits[tag_encontrada] = true;
                     misses++;
 
@@ -58,15 +77,31 @@
             {
                 if (nulo_encontrado != -1)
                 {
+                    Console.WriteLine("entrou");
+                    if (BlockReplacementPolicy == Enums.BlockReplacementPolicy.LRU)
+                    {
+                        Recently[set_int].Add(nulo_encontrado);
+                    }
+                    Console.WriteLine("passou");
                     Tags[nulo_encontrado] = tag;
                     Blocks[nulo_encontrado, word_int] = word;
                 }
                 else
                 {
-                    Random rnd = new Random();
-                    rnd.Next(0, blocks_per_set);
+                    switch (BlockReplacementPolicy)
+                    {
+                        case Enums.BlockReplacementPolicy.LRU:
+                            nulo_encontrado = Recently[set_int].First();
+                            Recently[set_int].Remove(nulo_encontrado);
+                            Recently[set_int].Add(nulo_encontrado);
+                            break;
+                        case Enums.BlockReplacementPolicy.RND:
+                            Random rnd = new Random();
+                            rnd.Next(0, blocks_per_set);
 
-                    nulo_encontrado = (set_int * blocks_per_set) + rnd.Next(0, blocks_per_set);
+                            nulo_encontrado = (set_int * blocks_per_set) + rnd.Next(0, blocks_per_set);
+                            break;
+                    }
 
                     DirtyBits[nulo_encontrado] = true;
                     misses++;

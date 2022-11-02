@@ -15,6 +15,8 @@
 
             //Console.WriteLine("[" + address.Binary + "] " + tag_part + " | " + block_part + " | " + word_part + " (" + i_block_part + ", " + i_word_part + ")");
 
+            inserts++;
+
             if (Tags[i_block_part] == null)
             {
                 Tags[i_block_part] = tag_part;

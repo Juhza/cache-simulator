@@ -18,6 +18,7 @@ namespace CacheSimulator.novo
         public bool[] DirtyBits;
         public int hits;
         public int misses;
+        public int inserts;
 
         public Cache(CacheConfiguration cacheConfiguration)
         {
@@ -38,8 +39,10 @@ namespace CacheSimulator.novo
             Blocks = new Word[(int)Math.Pow(2, BlockSize), (int)Math.Pow(2, WordSize)];
             DirtyBits = new bool[(int)Math.Pow(2, BlockSize)];
 
+
             hits = 0;
             misses = 0;
+            inserts = 0;
         }
 
         public abstract void InsertWord(Word word, Address address);
