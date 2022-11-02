@@ -13,7 +13,7 @@
             int i_block_part = Convert.ToInt32(block_part, 2);
             int i_word_part = Convert.ToInt32(word_part, 2);
 
-            //Console.WriteLine("[" + address.Binary + "] " + tag_part + " | " + block_part + " | " + word_part + "(" + i_block_part + ", " + i_word_part + ")");
+            //Console.WriteLine("[" + address.Binary + "] " + tag_part + " | " + block_part + " | " + word_part + " (" + i_block_part + ", " + i_word_part + ")");
 
             if (Tags[i_block_part] == null)
             {

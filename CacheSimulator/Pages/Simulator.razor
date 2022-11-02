@@ -37,7 +37,7 @@
                 <label for="placementPolicy" class="form-label">Placement policy</label>
                 <select class="form-select" @bind="_cacheConfiguration.PlacementPolicy">
                     <option value="@PlacementPolicy.DirectMapping">Direct Mapping</option>
-                    <option value="@PlacementPolicy.FullyAssociative">Fully Associative</option>
+                    <option value="@PlacementPolicy.FullyAssociative" disabled>Fully Associative</option>
                     <option value="@PlacementPolicy.NWaySetAssociative">N-Way Set Associative</option>
                 </select>
             </div>
