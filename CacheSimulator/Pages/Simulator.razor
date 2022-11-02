@@ -46,9 +46,9 @@
             <div class="col">
                 <label for="setSize" class="form-label">Block replacement policy</label>
                 <select class="form-select" id="blockSize" @bind="_cacheConfiguration.BlockReplacementPolicy">
-                    <option value="@BlockReplacementPolicy.LRU" selected>@BlockReplacementPolicy.LRU.ToString()</option>
-                    <option value="@BlockReplacementPolicy.LFU">@BlockReplacementPolicy.LFU.ToString()</option>
-                    <option value="@BlockReplacementPolicy.Random">@BlockReplacementPolicy.Random.ToString()</option>
+                    <option value="@BlockReplacementPolicy.LRU" selected>Least Recently Used (LRU)</option>
+                    <option value="@BlockReplacementPolicy.LFU">Least Frequently Used (LFU)</option>
+                    <option value="@BlockReplacementPolicy.RND">Random</option>
                 </select>
             </div>
             <div class="col">
@@ -81,15 +81,10 @@ else
     private bool _showResults;
     private string _errorMessage = string.Empty;
     private novo.Cache _cache;
+    private novo.Memory _memory = new Memory();
 
     private void ShowResults()
     {
-        _errorMessage = string.Empty;
-        
-        if (!_cacheConfiguration.NumberOfBlocks.IsPowerOfTwo() || !_cacheConfiguration.BlockSize.IsPowerOfTwo())
-        {
-            _errorMessage = "Não foi possível completar a operação.";
-        }
 
         switch (_cacheConfiguration.PlacementPolicy)
         {
@@ -105,6 +100,17 @@ else
                 _cache = new DirectMappingCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks);
                 break;
         }
+
+        _cache.hits = 10;
+
+
+        @*foreach (int content in _memory.Contents)
+        {
+            Word word = new Word(Convert.ToString(content));
+            Address address = new Address(content);
+
+            _cache.InsertWord(word, address);
+        }*@
 
         // chamar logica
         // gerar resultado

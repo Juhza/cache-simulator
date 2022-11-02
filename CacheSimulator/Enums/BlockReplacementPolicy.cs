@@ -2,6 +2,8 @@
 {
     public enum BlockReplacementPolicy
     {
-        LRU, LFU, Random
+        LRU,
+        LFU,
+        RND
     }
 }

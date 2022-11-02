@@ -2,17 +2,14 @@
 {
     public class DirectMappingCache : Cache
     {
-        public DirectMappingCache(int blockSize, int wordSize) : base(blockSize, wordSize)
-        {
+        public DirectMappingCache(int blockSize, int wordSize) : base(blockSize, wordSize) { }
 
-        }
-
-        public override void InsertData(byte data, string address)
+        public override void InsertWord(Word word, Address address)
         {
             throw new NotImplementedException();
         }
 
-        public override byte RetrieveData(string address)
+        public override Word RetrieveWord(Address address)
         {
             throw new NotImplementedException();
         }

@@ -4,22 +4,30 @@
     {
         public int BlockSize;
         public int WordSize;
+        public int CacheSize;
+        public int hits;
+        public int misses;
         public string[] Tags;
-        public byte[,] Blocks;
+        public Word[,] Blocks;
         public bool[] DirtyBits;
 
         public Cache(int blockSize, int wordSize)
         {
             BlockSize = blockSize;
             WordSize = wordSize;
+            CacheSize = blockSize * wordSize * 4;
+
+            hits = 0;
+            misses = 0;
+
             Tags = new string[blockSize];
-            Blocks = new byte[blockSize, wordSize];
+            Blocks = new Word[blockSize, wordSize];
             DirtyBits = new bool[blockSize];
         }
 
-        public abstract void InsertData(byte data, string address);
+        public abstract void InsertWord(Word word, Address address);
 
-        public abstract byte RetrieveData(string address);
+        public abstract Word RetrieveWord(Address address);
     }
 }
 

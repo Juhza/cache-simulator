@@ -3,17 +3,20 @@
     public class SetAssociativeCache : Cache
     {
         public int SetSize;
+
         public SetAssociativeCache(int blockSize, int wordSize, int setSize) : base(blockSize, wordSize)
         {
             SetSize = setSize;
         }
 
-        public override void InsertData(byte data, string address)
+        override
+        public void InsertWord(Word word, Address address)
         {
             throw new NotImplementedException();
         }
 
-        public override byte RetrieveData(string address)
+        override
+        public Word RetrieveWord(Address address)
         {
             throw new NotImplementedException();
         }

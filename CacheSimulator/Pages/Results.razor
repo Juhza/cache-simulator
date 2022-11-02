@@ -5,22 +5,22 @@
     <div class="col">
         <h5>Selected configuration</h5>
         <div>
-            <label>Number of blocks:</label> @Cache.Blocks.Length
+            <label>Number of blocks:</label> @Cache.BlockSize
         </div>
         <div>
-            <label>Block size:</label> @Cache.BlockSize
+            <label>Cache block size (words):</label> @Cache.WordSize
         </div>
         <div>
-            <label>Total cache size:</label> @Cache.Blocks.Length
+            <label>Cache size (bytes):</label> @Cache.CacheSize
         </div>
     </div>
 
     <div class="col">
         <div>
-            Miss %:
+            Miss %: @Cache.misses
         </div>
         <div>
-            Hit %:
+            Hit %: @Cache.hits
         </div>
     </div>
 </div>
