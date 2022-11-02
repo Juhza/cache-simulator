@@ -6,10 +6,17 @@ namespace CacheSimulator.novo
     {
         public int BlockSize;
         public int WordSize;
-        public PlacementPol 
-        public CacheConfiguration()
+        public int SetSize;
+        public PlacementPolicy PlacementPolicy;
+        public BlockReplacementPolicy BlockReplacementPolicy;
+
+        public CacheConfiguration(int blockSize, int wordSize, int setSize, PlacementPolicy placementPolicy, BlockReplacementPolicy blockReplacementPolicy)
         {
-            
+            BlockSize = blockSize;
+            WordSize = wordSize;
+            SetSize = setSize;
+            PlacementPolicy = placementPolicy;
+            BlockReplacementPolicy = blockReplacementPolicy;
         }
     }
 }

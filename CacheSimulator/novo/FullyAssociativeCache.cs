@@ -2,7 +2,7 @@
 {
     public class FullyAssociativeCache : Cache
     {
-        public FullyAssociativeCache(int blockSize, int wordSize) : base(blockSize, wordSize) { }
+        public FullyAssociativeCache(CacheConfiguration cacheConfiguration) : base(cacheConfiguration) { }
 
         override
         public void InsertWord(Word word, Address address)

@@ -1,28 +1,45 @@
-﻿namespace CacheSimulator.novo
+﻿using CacheSimulator.Enums;
+
+namespace CacheSimulator.novo
 {
     public abstract class Cache
     {
         public int BlockSize;
         public int WordSize;
+        public int SetSize;
+        public int BlockSizeDecimal;
+        public int WordSizeDecimal;
+        public int SetSizeDecimal;
+        public PlacementPolicy PlacementPolicy;
+        public BlockReplacementPolicy BlockReplacementPolicy;
         public int CacheSize;
-        public int hits;
-        public int misses;
         public string[] Tags;
         public Word[,] Blocks;
         public bool[] DirtyBits;
+        public int hits;
+        public int misses;
 
-        public Cache(int blockSize, int wordSize)
+        public Cache(CacheConfiguration cacheConfiguration)
         {
-            BlockSize = blockSize;
-            WordSize = wordSize;
-            CacheSize = blockSize * wordSize * 4;
+            BlockSize = cacheConfiguration.BlockSize;
+            WordSize = cacheConfiguration.WordSize;
+            SetSize = cacheConfiguration.SetSize;
+
+            BlockSizeDecimal = (int)Math.Pow(2, BlockSize);
+            WordSizeDecimal = (int)Math.Pow(2, WordSize);
+            SetSizeDecimal = (int)Math.Pow(2, SetSize);
+
+            PlacementPolicy = cacheConfiguration.PlacementPolicy;
+            BlockReplacementPolicy = cacheConfiguration.BlockReplacementPolicy;
+
+            CacheSize = BlockSizeDecimal * WordSizeDecimal;
+
+            Tags = new string[(int)Math.Pow(2, BlockSize)];
+            Blocks = new Word[(int)Math.Pow(2, BlockSize), (int)Math.Pow(2, WordSize)];
+            DirtyBits = new bool[(int)Math.Pow(2, BlockSize)];
 
             hits = 0;
             misses = 0;
-
-            Tags = new string[blockSize];
-            Blocks = new Word[blockSize, wordSize];
-            DirtyBits = new bool[blockSize];
         }
 
         public abstract void InsertWord(Word word, Address address);

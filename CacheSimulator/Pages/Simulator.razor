@@ -17,26 +17,26 @@
         <div class="row">
             <div class="col mb-3">
                 <label for="numberOfBlocks" class="form-label" @bind="_cacheConfiguration.NumberOfBlocks">Number of blocks</label>
-                <select class="form-select" id="numberOfBlocks" @bind="_cacheConfiguration.NumberOfBlocks">
-                    @foreach (var n in _values)
-                    {
-                        <option value="@n">@n</option>
-                    }
+                <select class="form-select" id="numberOfBlocks" @bind="_cacheConfiguration.BlockSize">
+                    <option value="1">2</option>
+                    <option value="2">4</option>
+                    <option value="3">8</option>
+                    <option value="4">16</option>
                 </select>
             </div>
             <div class="col mb-3">
                 <label for="blockSize" class="form-label">Block size (words)</label>
-                <select class="form-select" id="blockSize" @bind="_cacheConfiguration.BlockSize">
-                    @foreach (var n in _values)
-                    {
-                        <option value="@n">@n</option>
-                    }
+                <select class="form-select" id="blockSize" @bind="_cacheConfiguration.WordSize">
+                    <option value="1">2</option>
+                    <option value="2">4</option>
+                    <option value="3">8</option>
+                    <option value="4">16</option>
                 </select>
             </div>
             <div class="col-5 mb-3">
                 <label for="placementPolicy" class="form-label">Placement policy</label>
                 <select class="form-select" @bind="_cacheConfiguration.PlacementPolicy">
-                    <option value="@PlacementPolicy.DirectMapping" selected>Direct Mapping</option>
+                    <option value="@PlacementPolicy.DirectMapping">Direct Mapping</option>
                     <option value="@PlacementPolicy.FullyAssociative">Fully Associative</option>
                     <option value="@PlacementPolicy.NWaySetAssociative">N-Way Set Associative</option>
                 </select>
@@ -46,22 +46,19 @@
             <div class="col">
                 <label for="setSize" class="form-label">Block replacement policy</label>
                 <select class="form-select" id="blockSize" @bind="_cacheConfiguration.BlockReplacementPolicy">
-                    <option value="@BlockReplacementPolicy.LRU" selected>Least Recently Used (LRU)</option>
+                    <option value="@BlockReplacementPolicy.LRU">Least Recently Used (LRU)</option>
                     <option value="@BlockReplacementPolicy.LFU">Least Frequently Used (LFU)</option>
                     <option value="@BlockReplacementPolicy.RND">Random</option>
                 </select>
             </div>
             <div class="col">
-                @if (_cacheConfiguration.PlacementPolicy == PlacementPolicy.NWaySetAssociative)
-                {
-                    <label for="setSize" class="form-label">Set size</label>
-                    <select class="form-select" id="blockSize" @bind="_cacheConfiguration.SetSize">
-                        @foreach (var n in _values)
-                        {
-                            <option value="@n">@n</option>
-                        }
-                    </select>
-                }
+                <label for="setSize" class="form-label">Set size</label>
+                <select class="form-select" id="blockSize" @bind="_cacheConfiguration.SetSize">
+                    <option value="1">2</option>
+                    <option value="2">4</option>
+                    <option value="3">8</option>
+                    <option value="4">16</option>
+                </select>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-end">
                 <input type="submit" class="btn btn-secondary btn-lg" value="Show cache performance results" />
@@ -76,41 +73,40 @@ else
 
 
 @code {
-    private int[] _values = { 1, 2, 4, 8 };
-    private CacheConfigurationModel _cacheConfiguration = new();
+    private CacheConfigurationModel _cacheConfiguration = new CacheConfigurationModel();
     private bool _showResults;
     private string _errorMessage = string.Empty;
     private novo.Cache _cache;
     private novo.Memory _memory = new Memory();
 
+
     private void ShowResults()
     {
+
+        novo.CacheConfiguration cacheConfiguration = new novo.CacheConfiguration(_cacheConfiguration.BlockSize, _cacheConfiguration.WordSize, _cacheConfiguration.SetSize, _cacheConfiguration.PlacementPolicy, _cacheConfiguration.BlockReplacementPolicy);
 
         switch (_cacheConfiguration.PlacementPolicy)
         {
             case PlacementPolicy.FullyAssociative:
-                _cache = new FullyAssociativeCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks);
+                _cache = new FullyAssociativeCache(cacheConfiguration);
                 break;
 
             case PlacementPolicy.NWaySetAssociative:
-                _cache = new SetAssociativeCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks, 1); // trocar o 1
+                _cache = new SetAssociativeCache(cacheConfiguration); // trocar o 1
                 break;
 
             case PlacementPolicy.DirectMapping:
-                _cache = new DirectMappingCache(_cacheConfiguration.BlockSize, _cacheConfiguration.NumberOfBlocks);
+                _cache = new DirectMappingCache(cacheConfiguration);
                 break;
         }
 
-        _cache.hits = 10;
-
-
-        @*foreach (int content in _memory.Contents)
+        foreach (int content in _memory.Contents)
         {
-            Word word = new Word(Convert.ToString(content));
+            Word word = new Word(content);
             Address address = new Address(content);
 
             _cache.InsertWord(word, address);
-        }*@
+        }
 
         // chamar logica
         // gerar resultado

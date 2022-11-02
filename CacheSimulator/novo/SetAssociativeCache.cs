@@ -2,12 +2,7 @@
 {
     public class SetAssociativeCache : Cache
     {
-        public int SetSize;
-
-        public SetAssociativeCache(int blockSize, int wordSize, int setSize) : base(blockSize, wordSize)
-        {
-            SetSize = setSize;
-        }
+        public SetAssociativeCache(CacheConfiguration cacheConfiguration) : base(cacheConfiguration) { }
 
         override
         public void InsertWord(Word word, Address address)
