@@ -20,15 +20,21 @@
             Total de Acessos: @Cache.accesses
         </div>
         <div>
-            Acertos: @Cache.hits
+            Acertos: @Cache.hits (@(GetPercentage(Cache.hits, Cache.accesses))%)
         </div>
         <div>
-            Faltas: @Cache.misses
+            Faltas: @Cache.misses (@(GetPercentage(Cache.misses, Cache.accesses))%)
         </div>
     </div>
 </div>
 
 @code {
     [Parameter]
-    public novo.Cache Cache { get; set; } // n sei se vai dar pra manter os dados da config visto que foi removido de uso.
+    public novo.Cache Cache { get; set; }
+
+    private string GetPercentage(int misses, int accesses)
+    {
+        var result = (misses / Convert.ToDouble(accesses));
+        return (result * 100).ToString("N2");
+    }
 }
