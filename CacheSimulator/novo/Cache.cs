@@ -18,7 +18,7 @@ namespace CacheSimulator.novo
         public bool[] DirtyBits;
         public int hits;
         public int misses;
-        public int inserts;
+        public int accesses;
 
         public Cache(CacheConfiguration cacheConfiguration)
         {
@@ -42,7 +42,7 @@ namespace CacheSimulator.novo
 
             hits = 0;
             misses = 0;
-            inserts = 0;
+            accesses = 0;
         }
 
         public abstract void InsertWord(Word word, Address address);

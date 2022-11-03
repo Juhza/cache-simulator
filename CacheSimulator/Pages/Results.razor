@@ -17,13 +17,13 @@
 
     <div class="col">
         <div>
-            Miss %: @Cache.misses
+            Total de Acessos: @Cache.accesses
         </div>
         <div>
-            Hit %: @Cache.hits
+            Acertos: @Cache.hits
         </div>
         <div>
-            Total: @Cache.inserts
+            Faltas: @Cache.misses
         </div>
     </div>
 </div>
@@ -31,5 +31,4 @@
 @code {
     [Parameter]
     public novo.Cache Cache { get; set; } // n sei se vai dar pra manter os dados da config visto que foi removido de uso.
-
 }

@@ -94,7 +94,6 @@ else
     private novo.Cache _cache;
     private novo.Memory _memory = new Memory();
 
-
     private void ShowResults()
     {
 
@@ -107,7 +106,7 @@ else
                 break;
 
             case PlacementPolicy.NWaySetAssociative:
-                _cache = new SetAssociativeCache(cacheConfiguration); // trocar o 1
+                _cache = new SetAssociativeCache(cacheConfiguration);
                 break;
 
             case PlacementPolicy.DirectMapping:
@@ -122,9 +121,6 @@ else
 
             _cache.InsertWord(word, address);
         }
-
-        // chamar logica
-        // gerar resultado
 
         _showResults = true;
     }

@@ -27,7 +27,7 @@
 
             //Console.WriteLine("[" + address.Binary + "] " + tag + " | " + set_id + " | " + word_id + " (" + set_int + ", " + word_int + ")");
 
-            inserts++;
+            accesses++;
 
             int tag_encontrada = -1;
             int nulo_encontrado = -1;
@@ -85,6 +85,7 @@
                     Console.WriteLine("passou");
                     Tags[nulo_encontrado] = tag;
                     Blocks[nulo_encontrado, word_int] = word;
+                    misses++;
                 }
                 else
                 {
